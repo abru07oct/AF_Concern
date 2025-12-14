@@ -1,148 +1,202 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<title>Associate Forum – Raise Your Concern</title>
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta charset="utf-8">
+<title>Amazon Associate Forum</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
 <style>
-  body { font-family: Arial, sans-serif; background:#f7f7f7; padding:24px; }
-  .container { max-width:820px; margin:auto; background:#fff; padding:26px; border-radius:8px; }
-  h1 { margin:0 0 8px; font-size:22px; }
-  label { font-weight:600; }
+  body {
+    font-family: Arial, sans-serif;
+    background:#f4f4f4; /* Fallback color */
+    padding:24px;
+    margin:0;
+    
+    /* --- BACKGROUND STYLES FROM PREVIOUS STEP --- */
+    background-image: url('AF.jpg'); 
+    background-size: 400px auto; 
+    background-repeat: repeat; 
+    background-attachment: fixed; 
+    background-position: center center;
+  }
+
+  .container {
+    position: relative;
+    max-width: 850px;
+    margin: auto;
+    background: #ffffff; 
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    overflow: hidden;
+  }
+
+  /* WATERMARK IMAGE (Original code kept as is) */
+  .watermark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 520px;
+    opacity: 0.06;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .content {
+    position: relative;
+    z-index: 2;
+  }
+
+  /* HEADER IMAGE */
+  .header {
+    text-align: center;
+    margin-bottom: 25px;
+  }
+
+  .header img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  label {
+    font-weight: bold;
+    margin-top: 14px;
+    display: block;
+  }
+
   input, select, textarea {
-      width:100%; padding:10px; margin-top:6px; margin-bottom:14px;
-      border:1px solid #ccc; border-radius:6px; font-size:14px;
+    width: 100%;
+    padding: 10px;
+    margin-top: 6px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
   }
-  textarea { height:160px; }
+
+  textarea {
+    min-height: 160px;
+  }
+
   button {
-      background:#0366d6; color:#fff; border:none; padding:12px 18px;
-      border-radius:6px; cursor:pointer; font-weight:600;
+    margin-top: 20px;
+    background: #ff9900;
+    color: #000;
+    border: none;
+    padding: 12px 22px;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
   }
-  .secondary { background:#ddd; color:#000; }
+
+  button:hover {
+    background: #f0a020;
+  }
+
+  .note {
+    font-size: 12px;
+    color: #555;
+    margin-top: 12px;
+  }
 </style>
 </head>
 
 <body>
+
 <div class="container">
 
-<h1>ASSOCIATE FORUM</h1>
-<p>Raise your concern.</p>
+  <img class="watermark" src="data:image/jpeg;base64,
+{{AF_BASE64_IMAGE}}
+" alt="Watermark">
 
-<form id="forumForm" onsubmit="return handleSubmit(event)">
+  <div class="content">
 
-  <label>Name of Associate</label>
-  <input type="text" id="name" required>
+    <div class="header">
+      <img src="AF.jpg" alt="Amazon Associate Forum Logo">
+    </div>
 
-  <label>Login ID</label>
-  <input type="text" id="login" required>
+    <form onsubmit="return sendMail(event)">
 
-  <label>Date</label>
-  <input type="date" id="date" required>
+      <label>Name of Associate</label>
+      <input type="text" id="name" required>
 
-  <label>Department</label>
-  <select id="department" required>
-    <option value="">-- Select Department --</option>
-    <option>C-Rets</option>
-    <option>Pack</option>
-    <option>Pick</option>
-    <option>Stow</option>
-    <option>Shipping</option>
-    <option>VNA</option>
-    <option>Others</option>
-  </select>
+      <label>Login ID (Email)</label>
+      <input type="email" id="email" required>
 
-  <label>Send Anonymously?</label>
-  <select id="anon">
-    <option>No</option>
-    <option>Yes</option>
-  </select>
+      <label>Date</label>
+      <input type="date" id="date" required>
 
-  <label>Concern</label>
-  <textarea id="concern" required></textarea>
+      <label>Department</label>
+      <select id="dept" required>
+        <option value="">-- Select Department --</option>
+        <option>C-Rets</option>
+        <option>Pack</option>
+        <option>Pick</option>
+        <option>Stow</option>
+        <option>Shipping</option>
+        <option>VNA</option>
+        <option>Others</option>
+      </select>
 
-  <button type="submit">Submit Concern</button>
+      <label>Send Anonymously?</label>
+      <select id="anon">
+        <option>No</option>
+        <option>Yes</option>
+      </select>
 
-</form>
+      <label>Concern</label>
+      <textarea id="concern" required></textarea>
 
+      <button type="submit">Submit Concern</button>
+
+      <p class="note">
+        Concern will be sent privately to <b>puthuvelilabraham@gmail.com</b>
+      </p>
+
+    </form>
+
+  </div>
 </div>
 
 <script>
-// Auto-fill date
-(function () {
-  const d = new Date();
-  const yyyy = d.getFullYear();
-  const mm = String(d.getMonth() + 1).padStart(2, '0');
-  const dd = String(d.getDate()).padStart(2, '0');
-  document.getElementById('date').value = `${yyyy}-${mm}-${dd}`;
-})();
+  // Auto-fill current date
+  document.getElementById('date').value =
+    new Date().toISOString().split('T')[0];
 
-function handleSubmit(e) {
-  e.preventDefault();
+  function sendMail(e) {
+    e.preventDefault();
 
-  const name = document.getElementById('name').value.trim();
-  const login = document.getElementById('login').value.trim();
-  const date = document.getElementById('date').value;
-  const dep = document.getElementById('department').value;
-  const anon = document.getElementById('anon').value;
-  const concern = document.getElementById('concern').value.trim();
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const dept = document.getElementById('dept').value;
+    const anon = document.getElementById('anon').value;
+    const concern = document.getElementById('concern').value;
+    const date = document.getElementById('date').value;
 
-  const displayName = anon === "Yes"
-      ? "Anonymous"
-      : name;
+    const displayName = anon === "Yes" ? "Anonymous" : name;
 
-  // ------------------------------
-  // FORMAT EMAIL TO FORUM
-  // ------------------------------
-  const bodyForum =
-`ASSOCIATE FORUM SUBMISSION
+    const body =
+`AMAZON ASSOCIATE FORUM
 
-────────── ASSOCIATE DETAILS ──────────
-Name: ${displayName}
-Login ID: ${login}
-Department: ${dep}
-Date: ${date}
+Name       : ${displayName}
+Login ID   : ${email}
+Department : ${dept}
+Date       : ${date}
 
-───────────── CONCERN ─────────────
-${concern}
+Concern:
+${concern}`;
 
-────────────────────────────────────
-Thank you.
-`;
+    window.location.href =
+      "mailto:cwl1-forum@amazon.com" +
+      "?subject=" + encodeURIComponent("Associate Forum Concern") +
+      "&body=" + encodeURIComponent(body);
 
-  const mailtoForum =
-    "mailto:puthuvelilabraham@gmail.com"
-    + "?subject=" + encodeURIComponent("New Concern – " + displayName)
-    + "&body=" + encodeURIComponent(bodyForum);
-
-  // ------------------------------
-  // AUTO-REPLY TEMPLATE TO ASSOCIATE
-  // ------------------------------
-  const confirmationBody =
-`Hi ${anon === "Yes" ? "Associate" : name},
-
-Thanks for raising your concern. 
-We will reach you out with an update.
-
-Regards,
-Associate Forum Team`;
-
-  const mailtoAssociate =
-    "mailto:" + login +
-    "?subject=" + encodeURIComponent("Acknowledgement – Concern Received") +
-    "&body=" + encodeURIComponent(confirmationBody);
-
-  // Open forum mail first
-  window.location.href = mailtoForum;
-
-  // Then auto-open confirmation email after 1 second
-  setTimeout(() => {
-    window.location.href = mailtoAssociate;
-  }, 1200);
-
-  return false;
-}
+    return false;
+  }
 </script>
 
 </body>
 </html>
+
 
