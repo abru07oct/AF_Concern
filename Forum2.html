@@ -26,17 +26,7 @@
     border-radius: 8px;
     box-shadow: 0 8px 20px rgba(0,0,0,0.08);
     overflow: hidden;
-  }
-  /* WATERMARK IMAGE (Original code kept as is) */
-  .watermark {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 520px;
-    opacity: 0.06;
-    transform: translate(-50%, -50%);
-    pointer-events: none;
-    z-index: 0;
+  
   }
   .content {
     position: relative;
@@ -89,10 +79,7 @@
 </style>
 </head>
 <body>
-<div class="container">
-  <img class="watermark" src="data:image/jpeg;base64,
-{{AF_BASE64_IMAGE}}
-" alt="Watermark">
+
   <div class="content">
     <div class="header">
       <img src="AF.jpg" alt="Amazon Associate Forum Logo">
@@ -159,3 +146,4 @@ ${concern}`;
 </script>
 </body>
 </html>
+
